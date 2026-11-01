@@ -59,4 +59,17 @@ async function createAlbum(req,res)
     }
 }
 
-module.exports = {createMusic, createAlbum}
+async function getAllMusic(req,res)
+{
+    try
+    {
+        const musics = await Music.find().populate("artist","username")
+        return res.status(200).json({musics})
+    }
+    catch(err)
+    {
+        return res.status(401).json({message:err.message})
+    }
+}
+
+module.exports = {createMusic, createAlbum, getAllMusic}
