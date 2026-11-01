@@ -63,7 +63,10 @@ async function getAllMusic(req,res)
 {
     try
     {
-        const musics = await Music.find().populate("artist","username")
+        const musics = await Music
+        .find()
+        .limit(1)
+        .populate("artist","username")
         return res.status(200).json({musics})
     }
     catch(err)
@@ -76,7 +79,7 @@ async function getAllAlbums(req,res)
 {
     try
     {
-        const albums = await Album.find().populate("artist","username")
+        const albums = await Album.find().select("title artist").populate("artist","username")
         return res.status(200).json({albums})
     }
     catch(err)
@@ -85,4 +88,22 @@ async function getAllAlbums(req,res)
     }
 }
 
-module.exports = {createMusic, createAlbum, getAllMusic, getAllAlbums}
+async function getAlbumById(req,res)
+{
+    try
+    {
+        const {id} = req.params
+        const album = await Album.findById(id).populate("musics","title uri").populate("artist","username")
+        if(!album)
+        {
+            return res.status(404).json({message:"Album not found"})
+        }
+        return res.status(200).json({album})
+    }
+    catch(err)
+    {
+        return res.status(401).json({message:err.message})
+    }
+}
+
+module.exports = {createMusic, createAlbum, getAllMusic, getAllAlbums,getAlbumById}
