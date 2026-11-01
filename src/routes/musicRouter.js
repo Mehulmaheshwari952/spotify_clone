@@ -9,6 +9,7 @@ const upload = multer();
 const router = express.Router();
 
 router.get("/",authUser, musicControllers.getAllMusic)
+router.get("/getAlbums",authUser, musicControllers.getAllAlbums)
 router.post("/upload",authArtist, upload.single("music"), musicControllers.createMusic)
 router.post("/createAlbum",authArtist, musicControllers.createAlbum)
 
